@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"io"
 	"log"
@@ -9,6 +8,8 @@ import (
 	"net/url"
 	"os"
 	"strings"
+
+	"github.com/dustin/gojson"
 )
 
 type handler struct {
