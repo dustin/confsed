@@ -39,12 +39,20 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			h.Add(k, v)
 		}
 	}
-	w.WriteHeader(res.StatusCode)
 
 	if strings.Contains(res.Header.Get("content-type"), "json") {
-		io.Copy(w, rewriteJson(res.Body, rewriter.Replace))
+		w.Header().Del("Content-Length")
+		w.WriteHeader(res.StatusCode)
+		_, err := io.Copy(w, rewriteJson(res.Body, rewriter.Replace))
+		if err != nil {
+			log.Printf("Error in rewrite copy: %v", err)
+		}
 	} else {
-		io.Copy(w, res.Body)
+		w.WriteHeader(res.StatusCode)
+		_, err := io.Copy(w, res.Body)
+		if err != nil {
+			log.Printf("Error in non-rewrite copy: %v", err)
+		}
 	}
 }
 

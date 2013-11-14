@@ -64,7 +64,8 @@ func (m *machine) tick(inchar rune) error {
 		}
 	}
 	if m.state == outside && incomingState == outside {
-		m.out.WriteRune(inchar)
+		_, err := m.out.WriteRune(inchar)
+		return err
 	}
 
 	if m.state == outside && incomingState == inside {
